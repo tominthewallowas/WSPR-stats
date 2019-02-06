@@ -28,7 +28,8 @@ echo $wspr_file_name
 
 wget $wspr_file_location$wspr_file_name
 
-awk '/WB7EUX/' <(gzip -dc $wspr_file_name) > $output_file_name
+#awk '/WB7EUX/' <(gzip -dc $wspr_file_name) > $output_file_name
+awk '/$filter_phrase/' <(gzip -dc $wspr_file_name) > $output_file_name
 
 mysqlimport -u $user -p$password -h $server --fields-terminated-by=',' -S'/opt/lampp/var/mysql/mysql.sock' $database $output_file_name
 
