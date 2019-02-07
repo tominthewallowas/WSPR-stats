@@ -24,6 +24,7 @@ wget $wspr_file_location$wspr_filename
 awk '/M0RNR/' <(gzip -dc $wspr_filename) > $output_filename
 
 sqlite3 -batch "${db_file}" <<EOF
+delete from wspr_load;
 .separator "${field_terminater}"
 .import "${output_filename}" "${load_table}"
 EOF
