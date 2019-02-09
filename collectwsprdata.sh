@@ -17,16 +17,16 @@ else
   wspr_filename=$wspr_file_base_name_beginning$(date +%Y-%m)$wspr_file_base_name_end
 fi
 
-echo $wspr_filename
-
 wget $wspr_file_location$wspr_filename
 
-awk '/M0RNR/' <(gzip -dc $wspr_filename) > $output_filename
+awk -v pattern="$callsign" '$0 ~ pattern' <(gzip -dc $wspr_filename) > $output_filename
 
 sqlite3 -batch "${db_file}" <<EOF
 delete from wspr_load;
 .separator "${field_terminater}"
 .import "${output_filename}" "${load_table}"
+insert or ignore into "${stats_table}" select * from "${load_table}";
 EOF
 
-rm $output_filename $wspr_filename
+#rm $output_filename $wspr_filename
+mv $output_filename $wspr_filename testdata/
