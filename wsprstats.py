@@ -18,24 +18,38 @@ from astral import Location
 from UI_wsprstats import *
 
 import tombo.configfile
+import sqlstatements
+import sqlitedatabase
 
 class WSPRStats(QMainWindow):
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.configuration = tombo.configfile.ConfigFile('wsprstats.conf')
-        self.getConfiguration()
+        self.configuration = tombo.configfile.ConfigFile('wsprstats.conf').getItems('CONFIG')
+        print(self.configuration)
+        self.db = sqlitedatabase.SqliteDatabase(self.configuration['db_file'])
         self.setupMethods()
+        self.testQuery(sqlstatements.combined)
         self.show()
-
-        #----------------------------------------------------------------------
-    def getConfiguration(self):
-        pass
 
     #----------------------------------------------------------------------
     def setupMethods(self):
-        pass
+        self.ui.action_Quit.triggered.connect(lambda: self.methodDirector("Quit"))
+
+    #----------------------------------------------------------------------
+    def methodDirector(self, action):
+        print(action)
+        if action == 'Quit':
+            self.close()
+
+    #----------------------------------------------------------------------
+    def testQuery(self, statement):
+        print('Statement:', statement)
+        result = self.db.select(statement)
+        print(type(result))
+        while result.next():
+            print(result.value('reporter'), result.value('reporter_callsign_count'), result.value('xmit_callsign_count'))
 
     #----------------------------------------------------------------------
     def configActions(self, action):
