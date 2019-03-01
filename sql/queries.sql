@@ -20,3 +20,7 @@ select r.reporter, r. reporter_callsign_count, t.xmit_callsign_count from (selec
 
 -- I think WA7X is a band hopper so I will track his call sign for a while
 select band, count(*) as band_count from wspr_stats where xmit_callsign in ('WA7X') group by band
+
+select reporter, reporter_grid, signal_noise_ratio, receive_frequency_mhz, xmit_callsign, xmit_grid, xmit_power, xmit_drift, distance, azimuth from wspr_stats;
+
+

@@ -11,10 +11,10 @@ Date: 2/9/2019
 
 import sys
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QGraphicsScene
-from PyQt5.QtCore import Qt, QDate, QDateTime, QTimer
-from PyQt5.QtGui import QBrush, QColor, QPen
-from astral import Location
+from PyQt5.QtWidgets import (QMainWindow, QApplication, QGraphicsScene)
+from PyQt5.QtCore import (Qt, QDate, QDateTime, QTimer)
+from PyQt5.QtGui import (QBrush, QColor, QPen)
+from PyQt5.QtSql import (QSqlQuery, QSqlQueryModel)
 from UI_wsprstats import *
 
 import tombo.configfile
@@ -27,21 +27,81 @@ class WSPRStats(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.configuration = tombo.configfile.ConfigFile('wsprstats.conf').getItems('CONFIG')
-        print(self.configuration)
         self.db = sqlitedatabase.SqliteDatabase(self.configuration['db_file'])
         self.setupMethods()
-        self.testQuery(sqlstatements.combined)
+        self.reporter_grids = []
+        self.xmit_grids = []
+        self.methodDirector('Xmit_Callsigns')
+        self.methodDirector('Reporter_Callsigns')
+        
         self.show()
+
+    #----------------------------------------------------------------------
+    def selectModel(self, sql, callsign):
+        conn = self.db.getConnection()
+        model = QSqlQueryModel()
+        query = QSqlQuery(conn)
+        query.prepare(sql)
+        query.bindValue(':callsign', callsign)
+        #print(sql)
+        query.exec()
+        #print("Query error msg:", query.lastError().driverText())
+        model.setQuery(query)
+        self.ui.tblStats.setModel(model)
+
+    #----------------------------------------------------------------------
+    def loadXmitCallsigns(self, sql):
+        result = self.db.select(sql)
+        while result.next():
+            self.ui.cmbXmits.addItem(result.value('xmit_callsign'))
+            self.xmit_grids.append(result.value('xmit_grid'))
+
+    #----------------------------------------------------------------------
+    def loadReporterCallsigns(self, sql):
+        result = self.db.select(sql)
+        while result.next():
+            self.ui.cmbReporters.addItem(result.value('reporter'))
+            self.reporter_grids.append(result.value('reporter_grid'))
 
     #----------------------------------------------------------------------
     def setupMethods(self):
         self.ui.action_Quit.triggered.connect(lambda: self.methodDirector("Quit"))
+        #self.ui.pbLoadTable.clicked.connect(lambda: self.methodDirector("Table1"))
+        #self.ui.pbLoadTable2.clicked.connect(lambda: self.methodDirector("Table2"))
+        #self.ui.pbLoadList.clicked.connect(lambda: self.methodDirector("List"))
+        self.ui.cmbXmits.activated[str].connect(self.xmitComboSelect)
+        self.ui.cmbReporters.activated[str].connect(self.reporterComboSelect)
 
     #----------------------------------------------------------------------
     def methodDirector(self, action):
-        print(action)
         if action == 'Quit':
             self.close()
+        elif action == 'Table1':
+            self.selectModel('select count(*) as row_count from wspr_stats')
+        elif action == 'Table2':
+            self.selectModel(sqlstatements.combined)
+        elif action == 'Xmit_Callsigns':
+            self.loadXmitCallsigns(sqlstatements.xmit_callsigns)
+        elif action == 'Reporter_Callsigns':
+            self.loadReporterCallsigns(sqlstatements.reporter_callsigns)
+
+    #----------------------------------------------------------------------
+    def xmitComboSelect(self, text):
+        self.setReporterFacts(text, self.reporter_grids[self.ui.cmbReporters.currentIndex()])
+        self.selectModel(sqlstatements.xmit_findings, text)
+
+    #----------------------------------------------------------------------
+    def reporterComboSelect(self, text):
+        self.setReporterFacts(text, self.reporter_grids[self.ui.cmbReporters.currentIndex()])
+        self.selectModel(sqlstatements.reporter_findings, text)
+
+    #----------------------------------------------------------------------
+    def setReporterFacts(self, callsign, grid):
+        self.ui.lblCallsignFacts.setText(callsign + ' - ' + grid)
+
+    #----------------------------------------------------------------------
+    def setXmitFacts(self, callsign, grid):
+        self.ui.lblCallsignFacts.setText(callsign + ' - ' + grid)
 
     #----------------------------------------------------------------------
     def testQuery(self, statement):
@@ -54,7 +114,6 @@ class WSPRStats(QMainWindow):
     #----------------------------------------------------------------------
     def configActions(self, action):
         """Some pushbutton actions route here."""
-        #print(action)
         if action == 'clear':
             pass
         elif action == 'discard':

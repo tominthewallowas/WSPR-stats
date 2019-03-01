@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtSql import (QSqlDatabase, QSqlQuery)
+from PyQt5.QtSql import (QSqlDatabase, QSqlQuery, QSqlQueryModel)
 
 class SqliteDatabase():
 
@@ -23,3 +23,6 @@ class SqliteDatabase():
         if not q.exec(statement):
             self.check_error(q, self.db)
         return q
+
+    def getConnection(self):
+        return self.db
