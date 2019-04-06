@@ -22,7 +22,8 @@ wget $wspr_file_location$wspr_filename
 awk -v pattern="$callsign" '$0 ~ pattern' <(gzip -dc $wspr_filename) > $output_filename
 
 sqlite3 -batch "${db_file}" <<EOF
-delete from wspr_load;
+delete from "${load_table}";
+vacuum;
 .separator "${field_terminater}"
 .import "${output_filename}" "${load_table}"
 insert or ignore into "${stats_table}" select * from "${load_table}";

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
-    <height>600</height>
+    <width>689</width>
+    <height>614</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,66 +18,20 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>390</y>
+      <y>281</y>
       <width>631</width>
-      <height>161</height>
+      <height>281</height>
      </rect>
     </property>
     <attribute name="horizontalHeaderDefaultSectionSize">
      <number>65</number>
     </attribute>
    </widget>
-   <widget class="QComboBox" name="cmbReporters">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>40</y>
-      <width>151</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="cmbXmits">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>40</y>
-      <width>151</width>
-      <height>22</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>20</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Reporting Stations</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>200</x>
-      <y>20</y>
-      <width>101</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Transmitting Stations</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="lblCallsignFacts">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>345</y>
+      <y>251</y>
       <width>391</width>
       <height>31</height>
      </rect>
@@ -88,7 +42,297 @@
      </font>
     </property>
     <property name="text">
+     <string>Filler Text for Alignment</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="gbSpotsByDates">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>11</y>
+      <width>251</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Spots by Dates</string>
+    </property>
+    <widget class="QRadioButton" name="rbAllDates">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>All Dates</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbLast7Days">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Last 7 Days</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbLast30Days">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>80</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Last 30 Days</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbDateRange">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>100</y>
+       <width>101</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>By Date Range</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="gbDateRange">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>100</y>
+       <width>121</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>4</x>
+        <y>1</y>
+        <width>47</width>
+        <height>13</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>From</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>6</x>
+        <y>40</y>
+        <width>47</width>
+        <height>13</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>To</string>
+      </property>
+     </widget>
+     <widget class="QDateTimeEdit" name="dteFrom">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>3</x>
+        <y>14</y>
+        <width>111</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="displayFormat">
+       <string>yyyy-MM-dd HH:mm</string>
+      </property>
+     </widget>
+     <widget class="QDateTimeEdit" name="dteTo">
+      <property name="geometry">
+       <rect>
+        <x>3</x>
+        <y>53</y>
+        <width>111</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="displayFormat">
+       <string>yyyy-MM-dd HH:mm</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QRadioButton" name="rbPreviousDay">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Previous Day</string>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <property name="autoRepeat">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="gbTotalsByCategory">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>11</y>
+      <width>251</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Totals by Category</string>
+    </property>
+    <widget class="QRadioButton" name="rbNoCategory">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>121</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>No Categories</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbByReporterTransmitterBand">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>201</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>By Reporter, Transmitter, and Band</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="rbByBand">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>60</y>
+       <width>82</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Band</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>216</y>
+      <width>521</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="title">
      <string/>
+    </property>
+    <widget class="QPushButton" name="pbGatherData">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Gather Data</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbQuit">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>10</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Quit</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pbSelectModel">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>10</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>&amp;Select Model</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QListWidget" name="lwConfigInfo">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>140</y>
+      <width>251</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Plain</enum>
     </property>
    </widget>
   </widget>
@@ -97,7 +341,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>700</width>
+     <width>689</width>
      <height>21</height>
     </rect>
    </property>

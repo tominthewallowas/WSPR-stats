@@ -1,0 +1,26 @@
+1549655520
+1549655520
+1549655520
+1549655760
+1549655760
+1549655760
+1549655760
+1549655760
+1549655880
+1549655880
+
+
+Timestamp
+The time of the spot in unix time() format (seconds since 1970-01-01 00:00 UTC).
+To convert to an excel date value, use =time_cell/86400+"1/1/70" and then format it as a date/time.
+
+d = QDateTime.fromSecsSinceEpoch(1549655880)
+
+#!/usr/bin/python3
+from PyQt5.QtCore import QDateTime, Qt
+
+now = QDateTime.currentDateTime()
+unix_time = now.toSecsSinceEpoch() 
+print(unix_time)
+d = QDateTime.fromSecsSinceEpoch(unix_time)
+print(d.toString(Qt.ISODate))

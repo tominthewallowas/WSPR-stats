@@ -1,0 +1,63 @@
+sqlite> select count(*) from wspr_load;
+6686
+sqlite> select count(*) from wspr_stats;
+26733
+sqlite> select band, count(*) from wspr_stats group by band;
+
+select count(*) from wspr_load;
+select count(*) from wspr_stats;
+select band, count(*) from wspr_stats group by band;
+-------------------------------------------------
+Counts on 3/12/19 at 8:00AM PDT
+3|20695
+7|15
+10|6023
+-------------------------------------------------
+3/16/19
+sqlite> select count(*) from wspr_load;
+6902
+sqlite> select count(*) from wspr_stats;
+26949
+sqlite> select band, count(*) from wspr_stats group by band;
+3|20695
+7|15
+10|6023
+18|206
+21|10
+-------------------------------------------------
+3/18/19 8:38 AM
+6932
+26979
+3|20695
+7|15
+10|6023
+18|236
+21|10
+-------------------------------------------------
+3/20/19 8:12 AM
+3|20695
+7|15
+10|6023
+18|236
+21|10
+-------------------------------------------------
+3/24/19 Note: Database corrupted, deleted, and restored.
+14897
+14897
+3|6686
+7|1563
+10|4444
+14|1934
+18|260
+21|10
+-------------------------------------------------
+3/30/19
+25750
+25750
+1|736
+3|6700
+7|11665
+10|4444
+14|1935
+18|260
+21|10

@@ -1,0 +1,23 @@
+WSPR Stats
+
+What does it do?
+Uses information from the Weak Signal Reporting System (WSPR) to create statistical views.
+
+These views might include:
+	- Total number of spots
+	- Total number of spots by band
+	- Total number of spots by date range
+		- For a given month
+		- For a given day
+		- For a given year
+		- From a beginning date to an ending date
+	- Grid reprsentation of each individual spot per the criteria above
+	- Some graph representation of data
+		- Superimposed by band
+		- Number of spots in the y axis by some date range in the x axis
+
+What do I want it to do?
+
+What is interesting?
+
+If the data that is loaded is filtered for a single call sign at the time of loading then the reporting station will always be that call sign and the tranmitting station for that call sign will only collect those stations that heard it.
