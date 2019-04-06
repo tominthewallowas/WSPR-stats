@@ -2,7 +2,6 @@ import sys
 from PySide2.QtSql import (QSqlDatabase, QSqlQuery, QSqlQueryModel)
 
 class SqliteDatabase():
-''' Helper methods for sqlite. '''
 
     def __init__(self, db_type=':memory:'):
         self.db = QSqlDatabase.addDatabase('QSQLITE')
