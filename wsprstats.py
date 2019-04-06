@@ -18,6 +18,7 @@ from UI_wsprstats import *
 
 import tombo.configfile
 import sqlitedatabase
+import sqlcasephrases
 from selectionchoices import SelectionChoices
 
 class WSPRStats(QMainWindow):
@@ -42,6 +43,14 @@ class WSPRStats(QMainWindow):
         self.loadDateButtonGroup()
         self.loadCategoryButtonGroup()
         self.setDateGroupBoxStatus(self.RADIOBUTTON_ALL_DATES)
+
+    #----------------------------------------------------------------------
+    def setupMethods(self):
+        self.ui.action_Quit.triggered.connect(self.close)
+        self.ui.pbQuit.clicked.connect(self.close)
+        self.ui.pbCollectData.clicked.connect(self.selectModel)
+        self.dateButtonGroup.buttonClicked[int].connect(self.setDateGroupBoxStatus)
+        self.categoryButtonGroup.buttonClicked[int].connect(self.setCategoryChoice)
 
     #----------------------------------------------------------------------
     def loadCategoryButtonGroup(self):
@@ -87,14 +96,6 @@ class WSPRStats(QMainWindow):
         self.ui.dteTo.setDateTime(QDateTime.currentDateTime().toUTC())
 
     #----------------------------------------------------------------------
-    def setupMethods(self):
-        self.ui.action_Quit.triggered.connect(self.close)
-        self.ui.pbQuit.clicked.connect(self.close)
-        self.ui.pbSelectModel.clicked.connect(self.selectModel)
-        self.dateButtonGroup.buttonClicked[int].connect(self.setDateGroupBoxStatus)
-        self.categoryButtonGroup.buttonClicked[int].connect(self.setCategoryChoice)
-
-    #----------------------------------------------------------------------
     def setCategoryChoice(self, buttonId):
         self.selectionchoices.setCategoryChoice(buttonId)
 
@@ -121,13 +122,13 @@ class WSPRStats(QMainWindow):
         
         if self.selectionchoices.getDateChoice() == self.RADIOBUTTON_ALL_DATES:
             if self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_NO_CATEGORY:
-                sql = "select reporter as Reporter, xmit_callsign as 'Transmitter', datetime(timestamp, 'unixepoch') as 'Date/Time' from wspr_stats where reporter = :callsign or xmit_callsign = :callsign order by reporter, xmit_callsign"
+                sql = "select reporter as Reporter, reporter_grid as 'Rpt Grid', xmit_callsign as 'Transmitter', xmit_grid as 'Xmit Grid', " + sqlcasephrases.sql_power_case_phrase + " as Power, " + sqlcasephrases.sql_band_case_phrase + " as Band, distance as 'Distance(km)', datetime(timestamp, 'unixepoch') as 'Date/Time', signal_noise_ratio as SNR from wspr_stats where (reporter = :callsign or xmit_callsign = :callsign) order by reporter, xmit_callsign"
         
             if self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_BY_REPORTER_TRANSMITTER_BAND:
-                sql = "select reporter as Reporter, xmit_callsign as 'Transmitter', band as Band, count(*) as 'Band Count' from wspr_stats where reporter = :callsign or xmit_callsign = :callsign group by reporter, xmit_callsign, band order by reporter, xmit_callsign, band"
+                sql = "select reporter as Reporter, xmit_callsign as 'Transmitter', " + sqlcasephrases.sql_band_case_phrase + " as Band, count(*) as 'Band Count' from wspr_stats where reporter = :callsign or xmit_callsign = :callsign group by reporter, xmit_callsign, band order by reporter, xmit_callsign, band"
 
             if self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_BY_BAND:
-                sql = "select band as Band, count(*) as 'Band Count' from wspr_stats where reporter = :callsign or xmit_callsign = :callsign group by band order by band"
+                sql = "select  " + sqlcasephrases.sql_band_case_phrase + " as Band, count(*) as 'Band Count' from wspr_stats where reporter = :callsign or xmit_callsign = :callsign group by band order by band"
 
             query.prepare(sql)
             query.bindValue(':callsign', callsign)
@@ -145,11 +146,11 @@ class WSPRStats(QMainWindow):
                 toDateTime = self.ui.dteTo.dateTime().toSecsSinceEpoch()
 
             if self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_NO_CATEGORY:
-                sql = "select reporter as Reporter, xmit_callsign as 'Transmitter', datetime(timestamp, 'unixepoch') as 'Date/Time' from wspr_stats where (reporter = :callsign or xmit_callsign = :callsign) and (timestamp between :from and :to) order by reporter, xmit_callsign"
+                sql = "select reporter as Reporter, reporter_grid as 'Rpt Grid', xmit_callsign as 'Transmitter', xmit_grid as 'Xmit Grid', " + sqlcasephrases.sql_power_case_phrase + " as Power, " + sqlcasephrases.sql_band_case_phrase + " as Band, distance as 'Distance(km)', datetime(timestamp, 'unixepoch') as 'Date/Time', signal_noise_ratio as SNR from wspr_stats where (reporter = :callsign or xmit_callsign = :callsign) and (timestamp between :from and :to) order by reporter, xmit_callsign"
             elif self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_BY_REPORTER_TRANSMITTER_BAND:
                 sql = "select reporter as Reporter, xmit_callsign as 'Transmitter', band as Band, count(*) as 'Band Count' from wspr_stats where (reporter = :callsign or xmit_callsign = :callsign) and (timestamp between :from and :to) group by reporter, xmit_callsign, band order by reporter, xmit_callsign, band"
             elif self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_BY_BAND:
-                sql = "select band as Band, count(*) as 'Band Count' from wspr_stats where (reporter = :callsign or xmit_callsign = :callsign) and (timestamp between :from and :to) group by band order by band"
+                sql = "select " + sqlcasephrases.sql_band_case_phrase + " Band, count(*) as 'Band Count' from wspr_stats where (reporter = :callsign or xmit_callsign = :callsign) and (timestamp between :from and :to) group by band order by band"
 
             query.prepare(sql)
             query.bindValue(':callsign', callsign)
