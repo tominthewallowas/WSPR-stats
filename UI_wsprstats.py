@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'UI_wsprstats.ui',
 # licensing of 'UI_wsprstats.ui' applies.
 #
-# Created: Sat Apr  6 19:31:12 2019
+# Created: Sat Apr  6 19:57:02 2019
 #      by: pyside2-uic  running on PySide2 5.12.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,15 +17,9 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.tblStats = QtWidgets.QTableView(self.centralwidget)
-        self.tblStats.setGeometry(QtCore.QRect(30, 281, 631, 281))
+        self.tblStats.setGeometry(QtCore.QRect(30, 271, 631, 291))
         self.tblStats.setObjectName("tblStats")
         self.tblStats.horizontalHeader().setDefaultSectionSize(65)
-        self.lblCallsignFacts = QtWidgets.QLabel(self.centralwidget)
-        self.lblCallsignFacts.setGeometry(QtCore.QRect(30, 251, 391, 31))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.lblCallsignFacts.setFont(font)
-        self.lblCallsignFacts.setObjectName("lblCallsignFacts")
         self.gbSpotsByDates = QtWidgets.QGroupBox(self.centralwidget)
         self.gbSpotsByDates.setGeometry(QtCore.QRect(30, 11, 251, 201))
         self.gbSpotsByDates.setObjectName("gbSpotsByDates")
@@ -80,21 +74,18 @@ class Ui_MainWindow(object):
         self.rbByBand.setGeometry(QtCore.QRect(20, 60, 82, 17))
         self.rbByBand.setObjectName("rbByBand")
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_2.setGeometry(QtCore.QRect(30, 216, 521, 40))
+        self.groupBox_2.setGeometry(QtCore.QRect(30, 216, 251, 40))
         self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
-        self.pbGatherData = QtWidgets.QPushButton(self.groupBox_2)
-        self.pbGatherData.setGeometry(QtCore.QRect(10, 10, 75, 23))
-        self.pbGatherData.setObjectName("pbGatherData")
         self.pbQuit = QtWidgets.QPushButton(self.groupBox_2)
-        self.pbQuit.setGeometry(QtCore.QRect(90, 10, 75, 23))
+        self.pbQuit.setGeometry(QtCore.QRect(10, 10, 75, 23))
         self.pbQuit.setObjectName("pbQuit")
-        self.pbSelectModel = QtWidgets.QPushButton(self.groupBox_2)
-        self.pbSelectModel.setGeometry(QtCore.QRect(170, 10, 75, 23))
-        self.pbSelectModel.setObjectName("pbSelectModel")
+        self.pbCollectData = QtWidgets.QPushButton(self.groupBox_2)
+        self.pbCollectData.setGeometry(QtCore.QRect(160, 10, 75, 23))
+        self.pbCollectData.setObjectName("pbCollectData")
         self.lwConfigInfo = QtWidgets.QListWidget(self.centralwidget)
         self.lwConfigInfo.setEnabled(False)
-        self.lwConfigInfo.setGeometry(QtCore.QRect(300, 140, 251, 71))
+        self.lwConfigInfo.setGeometry(QtCore.QRect(300, 110, 251, 145))
         self.lwConfigInfo.setAutoFillBackground(False)
         self.lwConfigInfo.setFrameShape(QtWidgets.QFrame.Box)
         self.lwConfigInfo.setFrameShadow(QtWidgets.QFrame.Plain)
@@ -119,7 +110,6 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "MainWindow", None, -1))
-        self.lblCallsignFacts.setText(QtWidgets.QApplication.translate("MainWindow", "Filler Text for Alignment", None, -1))
         self.gbSpotsByDates.setTitle(QtWidgets.QApplication.translate("MainWindow", "Spots by Dates", None, -1))
         self.rbAllDates.setText(QtWidgets.QApplication.translate("MainWindow", "All Dates", None, -1))
         self.rbLast7Days.setText(QtWidgets.QApplication.translate("MainWindow", "Last 7 Days", None, -1))
@@ -134,9 +124,8 @@ class Ui_MainWindow(object):
         self.rbNoCategory.setText(QtWidgets.QApplication.translate("MainWindow", "No Categories", None, -1))
         self.rbByReporterTransmitterBand.setText(QtWidgets.QApplication.translate("MainWindow", "By Reporter, Transmitter, and Band", None, -1))
         self.rbByBand.setText(QtWidgets.QApplication.translate("MainWindow", "Band", None, -1))
-        self.pbGatherData.setText(QtWidgets.QApplication.translate("MainWindow", "&Gather Data", None, -1))
         self.pbQuit.setText(QtWidgets.QApplication.translate("MainWindow", "&Quit", None, -1))
-        self.pbSelectModel.setText(QtWidgets.QApplication.translate("MainWindow", "&Select Model", None, -1))
+        self.pbCollectData.setText(QtWidgets.QApplication.translate("MainWindow", "&Collect Data", None, -1))
         self.menu_Quit.setTitle(QtWidgets.QApplication.translate("MainWindow", "&File", None, -1))
         self.action_Quit.setText(QtWidgets.QApplication.translate("MainWindow", "&Quit", None, -1))
 
