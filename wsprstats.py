@@ -11,15 +11,14 @@ Date: 2/9/2019
 
 import sys
 
-from PyQt5.QtWidgets import (QMainWindow, QApplication, QGraphicsScene)
-from PyQt5.QtCore import (Qt, QDate, QDateTime, QTimer)
-from PyQt5.QtGui import (QBrush, QColor, QPen)
-from PyQt5.QtSql import (QSqlQuery, QSqlQueryModel)
+from PySide2.QtWidgets import (QMainWindow, QApplication, QHeaderView, QRadioButton, QButtonGroup)
+from PySide2.QtCore import (Qt, QDate, QDateTime)
+from PySide2.QtSql import (QSqlQuery, QSqlQueryModel)
 from UI_wsprstats import *
 
 import tombo.configfile
-import sqlstatements
 import sqlitedatabase
+from selectionchoices import SelectionChoices
 
 class WSPRStats(QMainWindow):
     def __init__(self):
@@ -28,117 +27,137 @@ class WSPRStats(QMainWindow):
         self.ui.setupUi(self)
         self.configuration = tombo.configfile.ConfigFile('wsprstats.conf').getItems('CONFIG')
         self.db = sqlitedatabase.SqliteDatabase(self.configuration['db_file'])
+        self.ui.lwConfigInfo.addItem('Datebase file: ' + self.configuration['db_file'])
+        self.ui.lwConfigInfo.addItem('Tracked Callsign: ' + self.configuration['trackedcallsign'])
+        self.selectionchoices = SelectionChoices()
+        self.initialize()
         self.setupMethods()
-        self.reporter_grids = []
-        self.xmit_grids = []
-        self.methodDirector('Xmit_Callsigns')
-        self.methodDirector('Reporter_Callsigns')
-        
         self.show()
 
     #----------------------------------------------------------------------
-    def selectModel(self, sql, callsign):
-        conn = self.db.getConnection()
-        model = QSqlQueryModel()
-        query = QSqlQuery(conn)
-        query.prepare(sql)
-        query.bindValue(':callsign', callsign)
-        #print(sql)
-        query.exec()
-        #print("Query error msg:", query.lastError().driverText())
-        model.setQuery(query)
-        self.ui.tblStats.setModel(model)
+    def initialize(self):
+        self.setDateTimeEdits()
+        self.dateButtonGroup = QButtonGroup()
+        self.categoryButtonGroup = QButtonGroup()
+        self.loadDateButtonGroup()
+        self.loadCategoryButtonGroup()
+        self.setDateGroupBoxStatus(self.RADIOBUTTON_ALL_DATES)
 
     #----------------------------------------------------------------------
-    def loadXmitCallsigns(self, sql):
-        result = self.db.select(sql)
-        while result.next():
-            self.ui.cmbXmits.addItem(result.value('xmit_callsign'))
-            self.xmit_grids.append(result.value('xmit_grid'))
+    def loadCategoryButtonGroup(self):
+        self.RADIOBUTTON_NO_CATEGORY = 0
+        self.RADIOBUTTON_BY_REPORTER_TRANSMITTER_BAND = 1
+        self.RADIOBUTTON_BY_BAND = 2
+
+        for button in [button for button in self.ui.gbTotalsByCategory.findChildren(QRadioButton)]:
+            if button.objectName() == 'rbNoCategory':
+                self.categoryButtonGroup.addButton(button, self.RADIOBUTTON_NO_CATEGORY)
+            elif button.objectName() == 'rbByReporterTransmitterBand':
+                self.categoryButtonGroup.addButton(button, self.RADIOBUTTON_BY_REPORTER_TRANSMITTER_BAND)
+            elif button.objectName() == 'rbByBand':
+                self.categoryButtonGroup.addButton(button, self.RADIOBUTTON_BY_BAND)
+            elif button.objectName() == 'rbByReportingStation':
+                self.categoryButtonGroup.addButton(button, self.RADIOBUTTON_BY_REPORTING_STATION)
+            elif button.objectName() == 'rbByTransmittingStation':
+                self.categoryButtonGroup.addButton(button, self.RADIOBUTTON_BY_TRANSMITTING_STATION)
+    #----------------------------------------------------------------------
+
+    def loadDateButtonGroup(self):
+        self.RADIOBUTTON_ALL_DATES = 0
+        self.RADIOBUTTON_PREVIOUS_DAY = 1
+        self.RADIOBUTTON_LAST_7_DAYS = 2
+        self.RADIOBUTTON_LAST_30_DAYS = 3
+        self.RADIOBUTTON_DATERANGE = 4
+
+        for button in [button for button in self.ui.gbSpotsByDates.findChildren(QRadioButton)]:
+            if button.objectName() == 'rbDateRange':
+                self.dateButtonGroup.addButton(button, self.RADIOBUTTON_DATERANGE)
+            elif button.objectName() == 'rbAllDates':
+                self.dateButtonGroup.addButton(button, self.RADIOBUTTON_ALL_DATES)
+            elif button.objectName() == 'rbPreviousDay':
+                self.dateButtonGroup.addButton(button, self.RADIOBUTTON_PREVIOUS_DAY)
+            elif button.objectName() == 'rbLast7Days':
+                self.dateButtonGroup.addButton(button, self.RADIOBUTTON_LAST_7_DAYS)
+            elif button.objectName() == 'rbLast30Days':
+                self.dateButtonGroup.addButton(button, self.RADIOBUTTON_LAST_30_DAYS)
 
     #----------------------------------------------------------------------
-    def loadReporterCallsigns(self, sql):
-        result = self.db.select(sql)
-        while result.next():
-            self.ui.cmbReporters.addItem(result.value('reporter'))
-            self.reporter_grids.append(result.value('reporter_grid'))
+    def setDateTimeEdits(self):
+        self.ui.dteFrom.setDateTime(QDateTime.currentDateTime().toUTC())
+        self.ui.dteTo.setDateTime(QDateTime.currentDateTime().toUTC())
 
     #----------------------------------------------------------------------
     def setupMethods(self):
-        self.ui.action_Quit.triggered.connect(lambda: self.methodDirector("Quit"))
-        #self.ui.pbLoadTable.clicked.connect(lambda: self.methodDirector("Table1"))
-        #self.ui.pbLoadTable2.clicked.connect(lambda: self.methodDirector("Table2"))
-        #self.ui.pbLoadList.clicked.connect(lambda: self.methodDirector("List"))
-        self.ui.cmbXmits.activated[str].connect(self.xmitComboSelect)
-        self.ui.cmbReporters.activated[str].connect(self.reporterComboSelect)
+        self.ui.action_Quit.triggered.connect(self.close)
+        self.ui.pbQuit.clicked.connect(self.close)
+        self.ui.pbSelectModel.clicked.connect(self.selectModel)
+        self.dateButtonGroup.buttonClicked[int].connect(self.setDateGroupBoxStatus)
+        self.categoryButtonGroup.buttonClicked[int].connect(self.setCategoryChoice)
 
     #----------------------------------------------------------------------
-    def methodDirector(self, action):
-        if action == 'Quit':
-            self.close()
-        elif action == 'Table1':
-            self.selectModel('select count(*) as row_count from wspr_stats')
-        elif action == 'Table2':
-            self.selectModel(sqlstatements.combined)
-        elif action == 'Xmit_Callsigns':
-            self.loadXmitCallsigns(sqlstatements.xmit_callsigns)
-        elif action == 'Reporter_Callsigns':
-            self.loadReporterCallsigns(sqlstatements.reporter_callsigns)
+    def setCategoryChoice(self, buttonId):
+        self.selectionchoices.setCategoryChoice(buttonId)
 
     #----------------------------------------------------------------------
-    def xmitComboSelect(self, text):
-        self.setReporterFacts(text, self.reporter_grids[self.ui.cmbReporters.currentIndex()])
-        self.selectModel(sqlstatements.xmit_findings, text)
+    def setDateGroupBoxStatus(self, buttonId):
+        self.selectionchoices.setDateChoice(buttonId)
+        self.ui.gbDateRange.setEnabled(True if buttonId == self.RADIOBUTTON_DATERANGE else False)
 
     #----------------------------------------------------------------------
-    def reporterComboSelect(self, text):
-        self.setReporterFacts(text, self.reporter_grids[self.ui.cmbReporters.currentIndex()])
-        self.selectModel(sqlstatements.reporter_findings, text)
+    def selectModel(self):
+        conn = self.db.getConnection()
+        model = QSqlQueryModel()
+        query = QSqlQuery(conn)
+        self.buildSqlStatement(query)
+        query.exec_()
+        if query.lastError().driverText(): print("Query error msg:", query.lastError().driverText())
+        model.setQuery(query)
+        self.ui.tblStats.setModel(model)
+        self.ui.tblStats.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
 
     #----------------------------------------------------------------------
-    def setReporterFacts(self, callsign, grid):
-        self.ui.lblCallsignFacts.setText(callsign + ' - ' + grid)
+    def buildSqlStatement(self, query):
+        callsign = self.configuration['trackedcallsign']
+        
+        if self.selectionchoices.getDateChoice() == self.RADIOBUTTON_ALL_DATES:
+            if self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_NO_CATEGORY:
+                sql = "select reporter as Reporter, xmit_callsign as 'Transmitter', datetime(timestamp, 'unixepoch') as 'Date/Time' from wspr_stats where reporter = :callsign or xmit_callsign = :callsign order by reporter, xmit_callsign"
+        
+            if self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_BY_REPORTER_TRANSMITTER_BAND:
+                sql = "select reporter as Reporter, xmit_callsign as 'Transmitter', band as Band, count(*) as 'Band Count' from wspr_stats where reporter = :callsign or xmit_callsign = :callsign group by reporter, xmit_callsign, band order by reporter, xmit_callsign, band"
 
-    #----------------------------------------------------------------------
-    def setXmitFacts(self, callsign, grid):
-        self.ui.lblCallsignFacts.setText(callsign + ' - ' + grid)
+            if self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_BY_BAND:
+                sql = "select band as Band, count(*) as 'Band Count' from wspr_stats where reporter = :callsign or xmit_callsign = :callsign group by band order by band"
 
-    #----------------------------------------------------------------------
-    def testQuery(self, statement):
-        print('Statement:', statement)
-        result = self.db.select(statement)
-        print(type(result))
-        while result.next():
-            print(result.value('reporter'), result.value('reporter_callsign_count'), result.value('xmit_callsign_count'))
+            query.prepare(sql)
+            query.bindValue(':callsign', callsign)
 
-    #----------------------------------------------------------------------
-    def configActions(self, action):
-        """Some pushbutton actions route here."""
-        if action == 'clear':
-            pass
-        elif action == 'discard':
-            pass
-        elif action == 'save':
-            pass
+        if self.selectionchoices.getDateChoice() in (self.RADIOBUTTON_PREVIOUS_DAY, self.RADIOBUTTON_LAST_7_DAYS, self.RADIOBUTTON_LAST_30_DAYS, self.RADIOBUTTON_DATERANGE):
+            toDateTime = QDateTime.currentDateTime().toSecsSinceEpoch()
+            if self.selectionchoices.getDateChoice() == self.RADIOBUTTON_PREVIOUS_DAY:
+                fromDateTime = QDateTime.currentDateTime().addDays(-1).toSecsSinceEpoch()
+            elif self.selectionchoices.getDateChoice() == self.RADIOBUTTON_LAST_7_DAYS:
+                fromDateTime = QDateTime.currentDateTime().addDays(-7).toSecsSinceEpoch()
+            elif self.selectionchoices.getDateChoice() == self.RADIOBUTTON_LAST_30_DAYS:
+                fromDateTime = QDateTime.currentDateTime().addDays(-30).toSecsSinceEpoch()
+            elif self.selectionchoices.getDateChoice() == self.RADIOBUTTON_DATERANGE:
+                fromDateTime = self.ui.dteFrom.dateTime().toSecsSinceEpoch()
+                toDateTime = self.ui.dteTo.dateTime().toSecsSinceEpoch()
 
-    #----------------------------------------------------------------------
-    def saveConfiguration(self):
-        """Save info from config fields."""
-        pass
- 
-    #----------------------------------------------------------------------
-    def clearConfigFields(self):
-        """Clear text from all config tab fields."""
-        pass
+            if self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_NO_CATEGORY:
+                sql = "select reporter as Reporter, xmit_callsign as 'Transmitter', datetime(timestamp, 'unixepoch') as 'Date/Time' from wspr_stats where (reporter = :callsign or xmit_callsign = :callsign) and (timestamp between :from and :to) order by reporter, xmit_callsign"
+            elif self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_BY_REPORTER_TRANSMITTER_BAND:
+                sql = "select reporter as Reporter, xmit_callsign as 'Transmitter', band as Band, count(*) as 'Band Count' from wspr_stats where (reporter = :callsign or xmit_callsign = :callsign) and (timestamp between :from and :to) group by reporter, xmit_callsign, band order by reporter, xmit_callsign, band"
+            elif self.selectionchoices.getCategoryChoice() == self.RADIOBUTTON_BY_BAND:
+                sql = "select band as Band, count(*) as 'Band Count' from wspr_stats where (reporter = :callsign or xmit_callsign = :callsign) and (timestamp between :from and :to) group by band order by band"
 
-    #----------------------------------------------------------------------
-    def discardConfigFields(self):
-        """Clear all config fields and repopulate with original text."""
-        pass
-
+            query.prepare(sql)
+            query.bindValue(':callsign', callsign)
+            query.bindValue(':from', int(fromDateTime))
+            query.bindValue(':to', int(toDateTime))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    smw = WSPRStats()
-    smw.show()
+    wss = WSPRStats()
+    wss.show()
     sys.exit(app.exec_())

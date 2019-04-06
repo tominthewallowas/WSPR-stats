@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtSql import (QSqlDatabase, QSqlQuery, QSqlQueryModel)
+from PySide2.QtSql import (QSqlDatabase, QSqlQuery, QSqlQueryModel)
 
 class SqliteDatabase():
 
@@ -19,8 +19,9 @@ class SqliteDatabase():
             sys.exit(1)
 
     def select(self, statement):
+        #print(statement)
         q = QSqlQuery()
-        if not q.exec(statement):
+        if not q.exec_(statement):
             self.check_error(q, self.db)
         return q
 
