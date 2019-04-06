@@ -74,3 +74,5 @@ where xmit_callsign = :callsign"
 
 select CASE band WHEN 1 THEN '160m' WHEN 3 THEN '80m' ELSE band END as Band,
 count(*) from wspr_stats where reporter = 'WB7EUX' or xmit_callsign = 'WB7EUX' group by band
+
+select reporter as Reporter, reporter_grid as 'Rpt Grid', xmit_callsign as 'Transmitter', xmit_grid as 'Xmit Grid', xmit_power as Power, distance as 'Distance(km)', datetime(timestamp, 'unixepoch') as 'Date/Time', signal_noise_ratio as SNR from wspr_stats where reporter = :callsign or xmit_callsign = :callsign order by reporter, xmit_callsign
