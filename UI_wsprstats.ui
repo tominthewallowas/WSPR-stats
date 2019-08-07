@@ -32,7 +32,7 @@
      <rect>
       <x>30</x>
       <y>11</y>
-      <width>251</width>
+      <width>291</width>
       <height>201</height>
      </rect>
     </property>
@@ -86,7 +86,7 @@
       <rect>
        <x>20</x>
        <y>100</y>
-       <width>101</width>
+       <width>131</width>
        <height>17</height>
       </rect>
      </property>
@@ -100,10 +100,10 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>100</y>
-       <width>121</width>
-       <height>80</height>
+       <x>150</x>
+       <y>71</y>
+       <width>131</width>
+       <height>121</height>
       </rect>
      </property>
      <property name="title">
@@ -112,8 +112,8 @@
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
-        <x>4</x>
-        <y>1</y>
+        <x>6</x>
+        <y>31</y>
         <width>47</width>
         <height>13</height>
        </rect>
@@ -125,8 +125,8 @@
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>6</x>
-        <y>40</y>
+        <x>8</x>
+        <y>70</y>
         <width>47</width>
         <height>13</height>
        </rect>
@@ -141,8 +141,8 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>3</x>
-        <y>14</y>
+        <x>5</x>
+        <y>44</y>
         <width>111</width>
         <height>22</height>
        </rect>
@@ -154,8 +154,8 @@
      <widget class="QDateTimeEdit" name="dteTo">
       <property name="geometry">
        <rect>
-        <x>3</x>
-        <y>53</y>
+        <x>5</x>
+        <y>83</y>
         <width>111</width>
         <height>22</height>
        </rect>
@@ -191,9 +191,9 @@
    <widget class="QGroupBox" name="gbTotalsByCategory">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>11</y>
-      <width>251</width>
+      <x>340</x>
+      <y>12</y>
+      <width>321</width>
       <height>91</height>
      </rect>
     </property>
@@ -204,7 +204,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>20</y>
+       <y>27</y>
        <width>121</width>
        <height>17</height>
       </rect>
@@ -220,7 +220,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>40</y>
+       <y>47</y>
        <width>201</width>
        <height>17</height>
       </rect>
@@ -233,7 +233,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>60</y>
+       <y>67</y>
        <width>82</width>
        <height>17</height>
       </rect>
@@ -247,9 +247,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>216</y>
-      <width>251</width>
-      <height>40</height>
+      <y>193</y>
+      <width>291</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="title">
@@ -258,9 +258,9 @@
     <widget class="QPushButton" name="pbQuit">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>75</width>
+       <x>12</x>
+       <y>30</y>
+       <width>101</width>
        <height>23</height>
       </rect>
      </property>
@@ -271,9 +271,9 @@
     <widget class="QPushButton" name="pbCollectData">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>10</y>
-       <width>75</width>
+       <x>178</x>
+       <y>30</y>
+       <width>101</width>
        <height>23</height>
       </rect>
      </property>
@@ -288,9 +288,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>300</x>
+      <x>340</x>
       <y>110</y>
-      <width>251</width>
+      <width>321</width>
       <height>145</height>
      </rect>
     </property>
@@ -311,7 +311,7 @@
      <x>0</x>
      <y>0</y>
      <width>689</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_Quit">
